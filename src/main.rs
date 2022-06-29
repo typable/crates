@@ -60,17 +60,23 @@ impl fmt::Display for Crate {
         lines.push(format!(
             "{} {}",
             pad!("Homepage:", 15),
-            pad!(self.homepage.clone().unwrap_or("- - -".into()), 65)
+            pad!(self.homepage.clone().unwrap_or_else(|| "- - -".into()), 65)
         ));
         lines.push(format!(
             "{} {}",
             pad!("Repository:", 15),
-            pad!(self.repository.clone().unwrap_or("- - -".into()), 65)
+            pad!(
+                self.repository.clone().unwrap_or_else(|| "- - -".into()),
+                65
+            )
         ));
         lines.push(format!(
             "{} {}",
             pad!("Documentation:", 15),
-            pad!(self.documentation.clone().unwrap_or("- - -".into()), 65)
+            pad!(
+                self.documentation.clone().unwrap_or_else(|| "- - -".into()),
+                65
+            )
         ));
         write!(f, "{}", lines[..].join("\n"))
     }
@@ -86,10 +92,12 @@ async fn main() -> surf::Result<()> {
                 match property.as_str() {
                     "latest" => println!("{}", target.max_version),
                     "stable" => println!("{}", target.max_stable_version),
-                    "homepage" => println!("{}", target.homepage.unwrap_or("- - -".into())),
-                    "repository" => println!("{}", target.repository.unwrap_or("- - -".into())),
+                    "homepage" => println!("{}", target.homepage.unwrap_or_else(|| "- - -".into())),
+                    "repository" => {
+                        println!("{}", target.repository.unwrap_or_else(|| "- - -".into()))
+                    }
                     "documentation" => {
-                        println!("{}", target.documentation.unwrap_or("- - -".into()))
+                        println!("{}", target.documentation.unwrap_or_else(|| "- - -".into()))
                     }
                     _ => unreachable!(),
                 }
